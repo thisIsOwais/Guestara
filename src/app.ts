@@ -1,6 +1,8 @@
 import express, { Application, Request, Response, NextFunction } from 'express'
 import createHttpError from 'http-errors'
 import { BaseError,ValidationError } from './shared/index'
+import itemRoutes from './modules/catalog/api/item.routes'
+
 // import { ValidationError } from './shared/errors/index'
 export const app: Application = express()
 
@@ -18,8 +20,9 @@ app.get('/health', (_req: Request, res: Response) => {
 
 // ===== error-test=====
 app.get('/error-test', () => {
-    throw new ValidationError('Invalid input provided')
-  })
+  throw new ValidationError('Invalid input provided')
+})
+app.use('/items', itemRoutes)
   
 
 // ===== API ROUTES (future) =====
@@ -55,4 +58,6 @@ app.use(
       })
     }
   )
+  
+
   

@@ -1,10 +1,15 @@
-import dotenv from 'dotenv'
-import { app } from './app'
+import 'dotenv/config'
+import {app} from './app'
+import { connectDB } from './infrastructure/database/mongoose.connection'
 
-dotenv.config()
+const PORT = process.env.PORT || 4000
 
-const PORT = process.env.PORT || 3000
+const startServer = async () => {
+  await connectDB()
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`)
-})
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on port ${PORT}`)
+  })
+}
+
+startServer()
