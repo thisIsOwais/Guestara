@@ -1,6 +1,6 @@
 import express, { Application, Request, Response, NextFunction } from 'express'
 import createHttpError from 'http-errors'
-import { BaseError,ValidationError } from './shared/errors/index'
+import { BaseError,ValidationError } from './shared/index'
 // import { ValidationError } from './shared/errors/index'
 export const app: Application = express()
 
