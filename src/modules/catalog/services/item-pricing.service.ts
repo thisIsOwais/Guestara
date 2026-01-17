@@ -49,11 +49,11 @@ export const getItemPrice = async (req: Request, res: Response) => {
     throw new NotFoundError('Category')
   }
 
-  // Context for pricing strategies
-//   const context = {
-//     quantity: Number(req.query.quantity) || 1,
-//     time: req.query.time || new Date().toISOString().slice(11, 16) // HH:mm
-//   }
+  // // Context for pricing strategies
+  // const context = {
+  //   quantity: Number(req.query.quantity) || 1,
+  //   time: req.query.time || new Date().toISOString().slice(11, 16) // HH:mm
+  // }
 
 const context = {
     quantity: Number(req.query.quantity) || 1,

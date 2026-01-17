@@ -38,7 +38,8 @@ const ItemSchema = new Schema<ItemDocument>(
     },
     parent_id: {
       type: Schema.Types.ObjectId,
-      required: true
+      required: true,
+      
     },
 
     name: {

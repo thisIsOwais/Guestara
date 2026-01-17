@@ -27,6 +27,7 @@ const CategorySchema = new Schema<CategoryDocument>(
       type: Boolean,
       default: false
     },
+    
     tax_percentage: {
       type: Number,
       min: 0,
