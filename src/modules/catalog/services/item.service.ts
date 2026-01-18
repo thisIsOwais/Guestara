@@ -188,7 +188,7 @@ export const listItems = async (query: any) => {
   const rawItems = await ItemModel.find(dbFilter) // default
     .lean()
 
-    console.log(rawItems)
+   
   /* --------------------------------------------------
      3️⃣ RESOLVE PRICE (ALL PRICING TYPES)
   -------------------------------------------------- */
@@ -234,6 +234,8 @@ export const listItems = async (query: any) => {
   -------------------------------------------------- */
   let filtered = resolvedItems
 
+  console.log("before filtering data.......",filtered)
+
   if (query.price_min) {
     filtered = filtered.filter(
       (i) => i.resolved_price >= Number(query.price_min)
@@ -246,14 +248,74 @@ export const listItems = async (query: any) => {
     )
   }
 
+  // 4️⃣ TIME FILTER (CRITICAL)
+  if (query.time || query.day) 
+  { 
+
+    const timeToMinutes = (time: string): number => {
+      const [h, m] = time.split(':').map(Number)
+      return h * 60 + m
+    } 
+
+    const queryTime = timeToMinutes(query.time)
+    console.log(queryTime)
+    console.log("time filter.......",query.day,query.time)
+    const timeFiltered = filtered.filter((item:any)=>
+      { 
+        const temp=item.availability; 
+        console.log(temp)
+        if(temp.days.includes(query.day) && temp.slots.some((slot:any)=> {
+          console.log( timeToMinutes(slot.start), queryTime , timeToMinutes(slot.end) , queryTime)
+          return timeToMinutes(slot.start) <= queryTime && timeToMinutes(slot.end) >= queryTime
+        }
+      )
+      )
+          { 
+
+            console.log("matched")
+            return true; 
+
+        } 
+      } 
+    )
+    console.log(timeFiltered)
+    }
+    // )
+    // const timeToMinutes = (time: string): number => {
+    //   const [h, m] = time.split(':').map(Number)
+    //   return h * 60 + m
+    // } 
+    // const queryTime = timeToMinutes(query.time)
+   
+    
+// const timeFiltered = filtered.filter((item: any) => {
+//   return item.availability?.some((avail: any) =>
+//     avail.days.includes(query.day) &&
+//     avail.slots.some((slot: any) => {
+//       const start = timeToMinutes(slot.start)
+//       const end = timeToMinutes(slot.end)
+//       return queryTime >= start && queryTime <= end
+//     })
+//   )
+// })
+
+//     console.log(timeFiltered)
+//   }
+    
+  
+
+  
   /* --------------------------------------------------
      5️⃣ SORTING
   -------------------------------------------------- */
   const sortBy = query.sort_by || 'createdAt'
   const order = query.order === 'asc' ? 1 : -1
 
+
+
   filtered.sort((a, b) => {
     if (sortBy === 'price') {
+
       return order === 1
         ? a.resolved_price - b.resolved_price
         : b.resolved_price - a.resolved_price
@@ -278,7 +340,6 @@ export const listItems = async (query: any) => {
   const total = filtered.length
   const paginated = filtered.slice(skip, skip + limit)
 
-  console.log(paginated)
   /* --------------------------------------------------
      7️⃣ RESPONSE
   -------------------------------------------------- */

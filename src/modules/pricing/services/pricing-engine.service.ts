@@ -26,7 +26,7 @@
       context
     }: any) {
       const strategy = this.strategies[item.pricing.type]
-  
+      console.log(context)
       if (!strategy) {
         throw new Error('Unsupported pricing type')
       }
