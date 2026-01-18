@@ -1,4 +1,4 @@
-import { ItemPricingService } from './item-pricing.service'
+import { getPrice } from './item-pricing.service'
 
 export class OrderPricingService {
   static async getOrderPrice(items: any[]) {
@@ -8,7 +8,7 @@ export class OrderPricingService {
     const pricedItems = []
 
     for (const entry of items) {
-      const price = await ItemPricingService.getPrice({
+      const price = await getPrice({
         itemId: entry.item_id,
         quantity: entry.quantity,
         time: entry.time,

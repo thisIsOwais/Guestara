@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import { ItemModel } from '../../modules/catalog/domain/item.entity'
 
 export const connectDB = async () => {
   try {
@@ -9,6 +10,8 @@ export const connectDB = async () => {
     }
 
     await mongoose.connect(uri)
+
+    await ItemModel.syncIndexes()
 
     console.log('✅ MongoDB connected')
   } catch (error) {

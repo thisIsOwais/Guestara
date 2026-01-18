@@ -84,13 +84,13 @@ import { PricingContextBuilder } from './pricing-context.builder'
 
 const pricingEngine = new PricingEngineService()
 
-export class ItemPricingService {
-  static async getPrice({
+// export class ItemPricingService {
+  export const getPrice= async ({
     itemId,
     quantity = 1,
     time = '10:00',
     addons = []
-  }: any) {
+  }: any)=> {
     const { item, category, subcategory } =
       await PricingContextBuilder.build(itemId)
 
@@ -107,4 +107,4 @@ export class ItemPricingService {
       context
     })
   }
-}
+

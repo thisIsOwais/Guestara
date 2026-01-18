@@ -14,12 +14,14 @@ export class TieredPricingStrategy implements PricingStrategy {
       }
     }
   }
-
+  
   calculate(config: any, context: { quantity: number }) {
+    console.log(typeof context.quantity)
     const tier = config.tiers
-      .sort((a: { up_to: number }, b: { up_to: number }) => a.up_to - b.up_to)
-      .find((t: any) => context.quantity <= t.up_to)
-
+      .sort((a: { upto: number }, b: { upto: number }) => a.upto - b.upto)
+      .find((t: any) => context.quantity <= t.upto )
+    
+    
     if (!tier) {
       throw new Error('No applicable tier found')
     }

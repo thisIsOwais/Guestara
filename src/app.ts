@@ -22,7 +22,7 @@ app.get('/health', (_req: Request, res: Response) => {
 app.get('/error-test', () => {
   throw new ValidationError('Invalid input provided')
 })
-// app.use('/items', itemRoutes)
+app.use('/items', itemRoutes)
   
 
 // ===== API ROUTES (future) =====
