@@ -136,6 +136,7 @@ import { CategoryModel } from '../domain/category.entity'
 import { SubcategoryModel } from '../domain/subcategory.entity'
 import { PricingEngineService } from '../../pricing/services/pricing-engine.service'
 import { buildPagination } from '../../../shared/utils/query-builder'
+import { Request } from 'express'
 
 const pricingEngine = new PricingEngineService()
 
@@ -188,12 +189,17 @@ export const listItems = async (query: any) => {
   const rawItems = await ItemModel.find(dbFilter) // default
     .lean()
 
+  const activeItems= rawItems.filter((item)=>{
+
+    return item.is_active;
+  })
+
    
   /* --------------------------------------------------
      3️⃣ RESOLVE PRICE (ALL PRICING TYPES)
   -------------------------------------------------- */
   const resolvedItems = await Promise.all(
-    rawItems.map(async (item) => {
+    activeItems.map(async (item) => {
       let category = null
       let subcategory = null
 
@@ -350,3 +356,44 @@ export const listItems = async (query: any) => {
     data: paginated
   }
 }
+
+export const listAvailabilty= async(req : Request):Promise<any>=>{
+    const id=req.query.id;
+
+    const item=await ItemModel.findById(id);
+
+    return item?.availability;
+
+}
+
+
+const disableItem= async(req:Request):Promise<any>=>{
+    const id=req.params.id;
+
+    const item=await ItemModel.findById(id);
+
+    if(item){
+        item.is_active=false;
+        await item.save();
+        return item;
+    }
+    else{
+        return null;
+    }
+}
+
+const enableItem= async(req:Request):Promise<any>=>{
+    const id=req.params.id;
+
+    const item=await ItemModel.findById(id);
+
+    if(item){
+        item.is_active=true;
+        await item.save();
+        return item;
+    }
+    else{
+        return null;
+    } 
+}
+
